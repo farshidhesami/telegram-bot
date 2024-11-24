@@ -1,6 +1,6 @@
 bot:
-  token: "7741493113:AAFdZkaYWiY-LkNYeuKdx4TPjyUiaH7ij68"
-  chat_id: "@Farshid_cryptosignals"
+  token: "7741493113:AAFdZkaYWiY-LkNYeuKdx4TPjyUiaH7ij68"  # Replace with your real token
+  chat_id: "@Farshid_cryptosignals"                        # Replace with your Telegram chat/channel ID
   symbols:
     - BTCUSDT
     - ETHUSDT
@@ -13,7 +13,7 @@ bot:
 
 api:
   coinmarketcap:
-    key: "f1c6dfa7-a427-4fd2-8b6b-a6f91b06e005"
+    key: "f1c6dfa7-a427-4fd2-8b6b-a6f91b06e005"             # Replace with your real CoinMarketCap API key
 
 logging:
   level: "INFO"
