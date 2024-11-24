@@ -1,0 +1,20 @@
+bot:
+  token: "7741493113:AAFdZkaYWiY-LkNYeuKdx4TPjyUiaH7ij68"
+  chat_id: "@Farshid_cryptosignals"
+  symbols:
+    - BTCUSDT
+    - ETHUSDT
+    - SOLUSDT
+    - BNBUSDT
+    - ADAUSDT
+    - XRPUSDT
+  interval: "1hour"
+  monitoring_interval: 60
+
+api:
+  coinmarketcap:
+    key: "f1c6dfa7-a427-4fd2-8b6b-a6f91b06e005"
+
+logging:
+  level: "INFO"
+  format: "[%(asctime)s] %(levelname)s: %(message)s"

@@ -1,0 +1,6 @@
+requests
+numpy
+python-decouple
+telebot
+python-telegram-bot
+pyyaml
