@@ -1,16 +1,13 @@
 from telegram import Update
 from telegram.ext import CallbackContext
 from telegram_bot.components.utils import fetch_crypto_price
+from telegram_bot.config.configuration import ConfigurationManager
 
-# Cryptocurrency references for detailed links
-COIN_REFERENCES = {
-    "BTC": "https://coinmarketcap.com/currencies/bitcoin/",
-    "ETH": "https://coinmarketcap.com/currencies/ethereum/",
-    "SOL": "https://coinmarketcap.com/currencies/solana/",
-    "BNB": "https://coinmarketcap.com/currencies/bnb/",
-    "ADA": "https://coinmarketcap.com/currencies/cardano/",
-    "XRP": "https://coinmarketcap.com/currencies/xrp/",
-}
+# Load configuration dynamically
+config_manager = ConfigurationManager()
+symbols = config_manager.get("bot.symbols", [])
+COIN_REFERENCES = {symbol.split("USDT")[0]: f"https://coinmarketcap.com/currencies/{symbol.split('USDT')[0].lower()}/" for symbol in symbols}
+
 
 def start_command(update: Update, context: CallbackContext) -> None:
     """
@@ -29,13 +26,8 @@ def start_command(update: Update, context: CallbackContext) -> None:
         "1. `/start` - View this help message.\n"
         "2. `/price [symbol]` - Get the current price of a cryptocurrency.\n\n"
         "Supported cryptocurrencies:\n"
-        "- BTC (Bitcoin)\n"
-        "- ETH (Ethereum)\n"
-        "- SOL (Solana)\n"
-        "- BNB (Binance Coin)\n"
-        "- ADA (Cardano)\n"
-        "- XRP (Ripple)\n\n"
-        "Example: `/price BTC`"
+        + "\n".join([f"- {symbol} ({symbol.lower().capitalize()})" for symbol in COIN_REFERENCES.keys()])
+        + "\n\nExample: `/price BTC`"
     )
     update.message.reply_text(message)
 
@@ -59,14 +51,17 @@ def get_crypto_price(update: Update, context: CallbackContext) -> None:
     symbol = args[0].upper()
     if symbol not in COIN_REFERENCES:
         update.message.reply_text(
-            f"❌ '{symbol}' is not supported. Try BTC, ETH, SOL, BNB, ADA, or XRP."
+            f"❌ '{symbol}' is not supported. Try one of the following: {', '.join(COIN_REFERENCES.keys())}."
         )
         return
 
     # Fetch the price using the utility function
     price, error = fetch_crypto_price(symbol)
     if error:
-        update.message.reply_text(f"⚠️ Error fetching price for {symbol}: {error}")
+        if "Invalid API Key" in error:
+            update.message.reply_text("❌ The API key for CoinMarketCap is invalid. Please check your configuration.")
+        else:
+            update.message.reply_text(f"⚠️ Error fetching price for {symbol}: {error}")
         return
 
     # Format the response with the price and reference link
