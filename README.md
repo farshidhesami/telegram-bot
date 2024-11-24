@@ -25,19 +25,20 @@ telegram-bot/
 │   │   ├── __init__.py
 │   │   ├── components/
 │   │   │   ├── __init__.py
-│   │   │   ├── command_handler.py  # Handles bot commands like /start and /price
-│   │   │   ├── utils.py            # Helper functions for API calls and signal analysis
+│   │   │   ├── command_handler.py
+│   │   │   ├── utils.py
 │   │   ├── config/
 │   │   │   ├── __init__.py
-│   │   │   ├── configuration.py    # Manages YAML-based configuration
-│   │   ├── main.py                 # Main entry point for running the bot
+│   │   │   ├── configuration.py
+│   │   ├── main.py
 ├── config/
-│   ├── config.yaml                 # Configuration file for bot settings
-├── .env                            # Environment variables for sensitive credentials
-├── README.md                       # Documentation for the project
-├── requirements.txt                # Python dependencies
-├── setup.py                        # Project packaging script
-└── template.py                     # Script to auto-generate the project structure
+│   ├── config.yaml
+├── requirements.txt
+├── .env
+├── setup.py
+├── README.md
+
+
 ```
 
 ---

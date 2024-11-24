@@ -3,10 +3,13 @@ import time
 import logging
 from pathlib import Path
 
-# Add the project root to PYTHONPATH dynamically
-sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+# Dynamically add the 'src' directory to PYTHONPATH
+current_file_path = Path(__file__).resolve()
+src_directory = current_file_path.parent.parent  # Points to 'src'
+if str(src_directory) not in sys.path:
+    sys.path.append(str(src_directory))  # Add 'src' to PYTHONPATH
 
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Application, CommandHandler
 from telegram_bot.components.command_handler import start_command, get_crypto_price
 from telegram_bot.components.utils import check_signals
 from telegram_bot.config.configuration import ConfigurationManager
@@ -23,21 +26,21 @@ def initialize_bot(config_manager):
         config_manager (ConfigurationManager): The configuration manager to load bot settings.
     
     Returns:
-        Updater: The initialized bot Updater.
+        Application: The initialized bot Application.
     """
     bot_token = config_manager.get("bot.token")
     if not bot_token:
         raise ValueError("Bot token is missing in configuration.")
 
-    updater = Updater(token=bot_token)
-    dispatcher = updater.dispatcher
+    # Use Application.builder to initialize the bot
+    application = Application.builder().token(bot_token).build()
 
     # Register bot commands
-    dispatcher.add_handler(CommandHandler("start", start_command))
-    dispatcher.add_handler(CommandHandler("price", get_crypto_price))
+    application.add_handler(CommandHandler("start", start_command))
+    application.add_handler(CommandHandler("price", get_crypto_price))
 
     logging.info("Commands registered successfully.")
-    return updater
+    return application
 
 
 def monitor_signals(config_manager):
@@ -76,9 +79,9 @@ def main():
 
     # Initialize bot
     try:
-        updater = initialize_bot(config_manager)
+        application = initialize_bot(config_manager)
         logging.info("🚀 Bot is running... Press Ctrl+C to stop.")
-        updater.start_polling()
+        application.run_polling()  # Use run_polling for the updated Application
 
         # Start monitoring signals
         monitor_signals(config_manager)
